@@ -18,11 +18,10 @@ class Iconverter():
 
 
 class Text2csv(Iconverter):
-    def convert(self,file):
-        input_file = "input.txt"
+    def convert(self, file):
         output_file = "output.csv"
         num_columns = 5
-        file = open(input_file, 'r', encoding="utf-8")
+        file = open(file, 'r', encoding="utf-8")
         new_text = file.readlines()
         words = []
         line_break = 0
@@ -43,12 +42,10 @@ class Text2csv(Iconverter):
 
 
 
-class Text2jason(Iconverter):
+class Text2json(Iconverter):
     def convert(self, file):
-        print(".json file")
-        filename = 'input.txt'
         dict1 = {}
-        with open(filename) as fh:
+        with open(file) as fh:
             for line in fh:
                 command, description = line.strip().split(None, 1)
                 dict1[command] = description.strip()
@@ -61,7 +58,6 @@ class Text2jason(Iconverter):
 
 class Text2xml(Iconverter):
     def convert(self, file):
-        print(".xml file")
         s = ""
         with open("input1.json") as f:
             s+=f.readline()
@@ -76,23 +72,28 @@ class Client:
     def text2csv(self):
         csv_converter = Text2csv()
         textConverter = TextConverter()
-        textConverter.textConvert(csv_converter, "input.txt")
+        textConverter.textConvert(csv_converter, self.fileName)
 
     def text2json(self):
-        json_converter = Text2jason()
+        json_converter = Text2json()
         textConverter = TextConverter()
-        textConverter.textConvert(json_converter, "input.txt")
+        textConverter.textConvert(json_converter, self.fileName)
 
     def text2xml(self):
         csv_converter = Text2xml()
         textConverter = TextConverter()
-        textConverter.textConvert(csv_converter, "input.txt")
+        textConverter.textConvert(csv_converter, self.fileName)
+
+    def setFile(self, fileName):
+        self.fileName = fileName
+
 
 if __name__ == '__main__':
 
     client = Client()
     app = Tk()
     filename = askopenfilename()
+    client.setFile(filename)
     app.title('Composit DP')
     app.geometry('700x350')
     lineButton = Button(app, text='text2csv', width=12, command=client.text2csv())
