@@ -1,6 +1,27 @@
-<?xml version="1.0" ?>
-<all>
-	<login type="str">mojombo</login>
-	<id type="int">1</id>
-	<avatar_url type="str">https://avatars0.githubusercontent.com/u/1?v=4</avatar_url>
-</all>
+<Employees>
+		<employee Name="Alif">
+            <designation>plyer</designation>
+            <age>22</age>
+            <salary>50k</salary>
+        </employee>
+		<employee Name="Mahdee">
+            <designation>Developer</designation>
+            <age>23</age>
+            <salary>60k</salary>
+        </employee>
+		<employee Name="Khalil">
+            <designation>Architect</designation>
+            <age>23</age>
+            <salary>220k</salary>
+        </employee>
+		<employee Name="Sadi">
+            <designation>Designer</designation>
+            <age>24</age>
+            <salary>110k</salary>
+        </employee>
+		<employee Name="Syed">
+            <designation>Gamer</designation>
+            <age>25</age>
+            <salary>80k</salary>
+        </employee>
+</Employees>

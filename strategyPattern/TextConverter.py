@@ -3,8 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
-from json2xml import json2xml
-from json2xml.utils import readfromurl, readfromstring, readfromjson
+import csv
 from abc import ABC, abstractmethod
 
 
@@ -20,7 +19,7 @@ class IConverter(ABC):
 class Text2csv(IConverter):
     def convert(self, input_file):
         output_file = "output.csv"
-        num_columns = 5
+        num_columns = 4
         input_file = open(input_file, 'r', encoding="utf-8")
         new_text = input_file.readlines()
         words = []
@@ -31,7 +30,7 @@ class Text2csv(IConverter):
 
         f = open(output_file, 'w')
         for x in range(0, len(words)):
-            if (line_break == num_columns):
+            if line_break == num_columns:
                 f.write('\n')
                 f.write(words[x])
                 line_break = 1
@@ -44,24 +43,54 @@ class Text2csv(IConverter):
 class Text2json(IConverter):
     def convert(self, input_file):
         dict1 = {}
+        fields = []
+        first_line = True
+        sl = 1
         with open(input_file) as fh:
             for line in fh:
-                command, description = line.strip().split(None, 1)
-                dict1[command] = description.strip()
-
+                if first_line:
+                    fields = line.strip().split(None, 4)
+                    print(fields)
+                    first_line = False
+                    continue
+                description = list(line.strip().split(None, 4))
+                print(description)
+                sno = 'emp' + str(sl)
+                dict2 = {}
+                i = 0
+                while i < len(fields):
+                    dict2[fields[i]] = description[i]
+                    i = i + 1
+                dict1[sno] = dict2
+                sl += 1
         out_file = open("output.json", "w")
         json.dump(dict1, out_file, indent=4, sort_keys=False)
         out_file.close()
 
 
 class Text2xml(IConverter):
+    def convert_xml(self, row):
+        return """<employee Name="%s">
+            <designation>%s</designation>
+            <age>%s</age>
+            <salary>%s</salary>
+        </employee>""" % (row[0], row[1], row[2], row[3])
+
     def convert(self, input_file):
         s = ""
-        with open("input1.json") as f:
-            s += f.readline()
-        data = readfromstring(s)
-        with open("output.xml", 'w') as f:
-            f.write(json2xml.Json2xml(data, wrapper="all", pretty=True).to_xml())
+        Text2csv().convert(input_file)
+        f = open('output.csv')
+        csv_f = csv.reader(f)
+        data = []
+
+        for row in csv_f:
+            data.append(row)
+        f.close()
+        print(data)
+        out_file = open("output.xml", "w")
+        out_file.write('<Employees>\n\t\t')
+        out_file.write('\n\t\t'.join([self.convert_xml(row) for row in data[1:]]))
+        out_file.write('\n</Employees>')
 
 
 class Client:

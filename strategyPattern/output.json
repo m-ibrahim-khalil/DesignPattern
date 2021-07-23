@@ -1,3 +1,32 @@
 {
-    "Ibrahim": "khalil is a good man. He helps other people frequently."
+    "emp1": {
+        "name": "Alif",
+        "designation": "plyer",
+        "age": "22",
+        "salary": "50k"
+    },
+    "emp2": {
+        "name": "Mahdee",
+        "designation": "Developer",
+        "age": "23",
+        "salary": "60k"
+    },
+    "emp3": {
+        "name": "Khalil",
+        "designation": "Architect",
+        "age": "23",
+        "salary": "220k"
+    },
+    "emp4": {
+        "name": "Sadi",
+        "designation": "Designer",
+        "age": "24",
+        "salary": "110k"
+    },
+    "emp5": {
+        "name": "Syed",
+        "designation": "Gamer",
+        "age": "25",
+        "salary": "80k"
+    }
 }

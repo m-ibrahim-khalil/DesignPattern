@@ -1,1 +1,6 @@
-Ibrahim khalil is a good man. He helps other people frequently.
+name designation age salary
+Alif plyer 22 50k
+Mahdee Developer 23 60k
+Khalil Architect 23 220k
+Sadi Designer 24 110k
+Syed Gamer 25 80k
