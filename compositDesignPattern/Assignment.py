@@ -1,6 +1,6 @@
 import turtle
 import tkinter as tk
-from abc import ABC
+from abc import ABC, abstractmethod
 
 SPEED = 5
 BG_COLOR = "#6200EE"
@@ -16,9 +16,11 @@ TITLE = "Drawing Board"
 
 
 class IShape(ABC):
+    @abstractmethod
     def draw(self):
         pass
 
+    @abstractmethod
     def build(self):
         pass
 
@@ -27,6 +29,7 @@ class CompositeShape(IShape, ABC):
     def __init__(self):
         self.shapes = []
 
+    @abstractmethod
     def build(self):
         pass
 

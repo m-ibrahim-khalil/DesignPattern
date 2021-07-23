@@ -1,28 +1,28 @@
 import json
-import codecs
-from tkinter import *
-from tkinter import filedialog
-from tkinter.filedialog import askopenfilename
+import tkinter as tk
+from tkinter import ttk
+from tkinter import filedialog as fd
+from tkinter.messagebox import showinfo
 from json2xml import json2xml
 from json2xml.utils import readfromurl, readfromstring, readfromjson
+from abc import ABC, abstractmethod
 
 
-class TextConverter():
-    def textConvert(self,_converter, file):
-        _converter.convert(file)
+filename = 'input.txt'
 
 
-class Iconverter():
-    def convert(self, file):
+class IConverter(ABC):
+    @abstractmethod
+    def convert(self, input_file):
         pass
 
 
-class Text2csv(Iconverter):
-    def convert(self, file):
+class Text2csv(IConverter):
+    def convert(self, input_file):
         output_file = "output.csv"
         num_columns = 5
-        file = open(file, 'r', encoding="utf-8")
-        new_text = file.readlines()
+        input_file = open(input_file, 'r', encoding="utf-8")
+        new_text = input_file.readlines()
         words = []
         line_break = 0
         for x in range(0, len(new_text)):
@@ -41,11 +41,10 @@ class Text2csv(Iconverter):
         f.close()
 
 
-
-class Text2json(Iconverter):
-    def convert(self, file):
+class Text2json(IConverter):
+    def convert(self, input_file):
         dict1 = {}
-        with open(file) as fh:
+        with open(input_file) as fh:
             for line in fh:
                 command, description = line.strip().split(None, 1)
                 dict1[command] = description.strip()
@@ -55,53 +54,59 @@ class Text2json(Iconverter):
         out_file.close()
 
 
-
-class Text2xml(Iconverter):
-    def convert(self, file):
+class Text2xml(IConverter):
+    def convert(self, input_file):
         s = ""
         with open("input1.json") as f:
-            s+=f.readline()
-        data = readfromstring(
-            s
-        )
+            s += f.readline()
+        data = readfromstring(s)
         with open("output.xml", 'w') as f:
             f.write(json2xml.Json2xml(data, wrapper="all", pretty=True).to_xml())
 
 
 class Client:
-    def text2csv(self):
-        csv_converter = Text2csv()
-        textConverter = TextConverter()
-        textConverter.textConvert(csv_converter, self.fileName)
+    def __init__(self, _converter: IConverter):
+        self._converter = _converter
 
-    def text2json(self):
-        json_converter = Text2json()
-        textConverter = TextConverter()
-        textConverter.textConvert(json_converter, self.fileName)
+    def convert(self, input_file):
+        self._converter.convert(input_file)
 
-    def text2xml(self):
-        csv_converter = Text2xml()
-        textConverter = TextConverter()
-        textConverter.textConvert(csv_converter, self.fileName)
 
-    def setFile(self, fileName):
-        self.fileName = fileName
+def select_file():
+        filetypes = (
+            ('text files', '*.txt'),
+            ('All files', '*.*')
+        )
+
+        filename = fd.askopenfilename(
+            title='Open a file',
+            initialdir='/',
+            filetypes=filetypes)
+
+        showinfo(
+            title='Selected File',
+            message=filename
+        )
 
 
 if __name__ == '__main__':
-
-    client = Client()
-    app = Tk()
-    filename = askopenfilename()
-    client.setFile(filename)
-    app.title('Composit DP')
+    app = tk.Tk()
+    app.title('Strategy Pattern')
     app.geometry('700x350')
-    lineButton = Button(app, text='text2csv', width=12, command=client.text2csv())
-    lineButton.grid(row=3, column=0, pady=20)
-    lineButton = Button(app, text='text2json', width=12, command=client.text2json())
-    lineButton.grid(row=4, column=0, pady=20)
-    lineButton = Button(app, text='text2xml', width=12, command=client.text2xml())
-    lineButton.grid(row=5, column=0, pady=20)
+    open_button = ttk.Button(
+        app,
+        text='Open a File',
+        command=select_file
+    )
+
+    open_button.pack(expand=True)
+
+    lineButton = ttk.Button(app, text='text2csv', width=12, command=Client(Text2csv()).convert(filename))
+    lineButton.pack(expand=True)
+    lineButton = ttk.Button(app, text='text2json', width=12, command=Client(Text2json()).convert(filename))
+    lineButton.pack(expand=True)
+    lineButton = ttk.Button(app, text='text2xml', width=12, command=Client(Text2xml()).convert(filename))
+    lineButton.pack(expand=True)
 
     app.mainloop()
 
